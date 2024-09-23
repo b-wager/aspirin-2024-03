@@ -1,28 +1,41 @@
-struct Node {}
+struct Node {
+    val: i32,
+    next: Link,
+}
 
 type Link = Option<Box<Node>>;
 
-pub struct LinkedStack {}
+pub struct LinkedStack {
+    head: Link,
+}
 
 impl LinkedStack {
     fn new() -> Self {
-        todo!()
+        LinkedStack { head: None }
     }
 
     fn push(&mut self, val: i32) {
-        todo!();
+        let new_node = Box::new(Node {
+            val,
+            next: self.head.take(),
+        });
+
+        self.head = Some(new_node);
     }
 
     fn pop(&mut self) -> Option<i32> {
-        todo!();
+        self.head.take().map(|node| {
+            self.head = node.next;
+            node.val
+        })
     }
 }
 
-impl Drop for LinkedStack {
-    fn drop(&mut self) {
-        todo!();
-    }
-}
+// impl Drop for LinkedStack {
+//     fn drop(&mut self) {
+//         todo!();
+//     }
+// }
 
 // DO NOT MODIFY BELOW THIS LINE
 
