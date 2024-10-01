@@ -1,30 +1,30 @@
 /// Take ownership of the passed in string and print it
-fn takes_ownership_and_prints() {
-    todo!();
+fn takes_ownership_and_prints(s: String) {
+    println!("{}", s);
 }
 
 /// Take a string slice and return the first letter, or None in the case
 /// of a blank string
-fn first_letter() {
-    todo!();
+fn first_letter(s: &str) -> Option<&str> {
+    s.get(0..1)
 }
 
 type Student = (String, u32);
 
 /// Given a reference to a student, return the student's name
-fn get_name() {
-    todo!();
+fn get_name(student: &Student) -> &str {
+    &student.0
 }
 
 /// Given a slice of i32s, return the sum of the elements
-fn slice_sum() {
-    todo!();
+fn slice_sum(slice: &[i32]) -> i32 {
+    slice.iter().sum()
 }
 
 /// Given a string slice, look for a substring, and return a slice of the first
 /// occurrence of the substring (return None if the substring is not found)
-fn find_in_string() {
-    todo!();
+fn find_in_string<'a>(sentence: &'a str, word: &String) -> Option<&'a str> {
+    sentence.find(word).map(|i| &sentence[i..i + word.len()])
 }
 
 // DO NOT MODIFY BELOW THIS LINE
