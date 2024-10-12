@@ -1,19 +1,100 @@
-fn split_string(string: &str, delimeter: &str) -> Vec<&str> {
-    todo!()
+fn split_string<'a>(string: &'a str, delimiter: &str) -> Vec<&'a str> {
+    let mut split_string: Vec<&str> = Vec::new();
+    let mut start = 0;
+
+    while start < string.len() {
+        if let Some(pos) = string[start..].find(delimiter) {
+            split_string.push(&string[start..start + pos]);
+            start += pos + delimiter.len();
+        } else {
+            split_string.push(&string[start..]);
+            break;
+        }
+    }
+
+    split_string
 }
 
 #[derive(PartialEq, Debug)]
-struct Differences {
-    only_in_first: Vec<&str>,
-    only_in_second: Vec<&str>,
+struct Differences<'a> {
+    only_in_first: Vec<&'a str>,
+    only_in_second: Vec<&'a str>,
 }
 
-fn find_differences(first_string: &str, second_string: &str) -> Differences {
-    todo!()
+fn find_differences<'a>(first_string: &'a str, second_string: &'a str) -> Differences<'a> {
+    let mut only_in_first: Vec<&str> = Vec::new();
+    let mut only_in_second: Vec<&str> = Vec::new();
+
+    for word in first_string.split_whitespace() {
+        if !second_string.contains(word) {
+            only_in_first.push(word);
+        }
+    }
+
+    for word in second_string.split_whitespace() {
+        if !first_string.contains(word) {
+            only_in_second.push(word);
+        }
+    }
+
+    Differences {
+        only_in_first,
+        only_in_second,
+    }
 }
 
 fn merge_names(first_name: &str, second_name: &str) -> String {
-    todo!()
+    let mut merged_name = String::new();
+    let first_name_chars: Vec<char> = first_name.chars().collect();
+    let second_name_chars: Vec<char> = second_name.chars().collect();
+    let mut first_index = 0;
+    let mut second_index = 0;
+
+    loop {
+        let mut added_char = false;
+
+        // Add the next character of the first name
+        if first_index < first_name_chars.len() {
+            merged_name.push(first_name_chars[first_index]);
+            first_index += 1;
+            added_char = true;
+        }
+        // Add characters from the first name until a vowel is found
+        while first_index < first_name_chars.len() {
+            let first_char = first_name_chars[first_index];
+            if !matches!(first_char, 'a' | 'e' | 'i' | 'o' | 'u') {
+                merged_name.push(first_char);
+                first_index += 1;
+                added_char = true;
+            } else {
+                break;
+            }
+        }
+
+        // Add the next character of the second name
+        if second_index < second_name_chars.len() {
+            merged_name.push(second_name_chars[second_index]);
+            second_index += 1;
+            added_char = true;
+        }
+        // Add characters from the second name until a vowel is found
+        while second_index < second_name_chars.len() {
+            let second_char = second_name_chars[second_index];
+            if !matches!(second_char, 'a' | 'e' | 'i' | 'o' | 'u') {
+                merged_name.push(second_char);
+                second_index += 1;
+                added_char = true;
+            } else {
+                break;
+            }
+        }
+
+        if !added_char {
+            break;
+        }
+    }
+
+    merged_name
 }
 
 #[cfg(test)]
