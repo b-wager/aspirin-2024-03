@@ -195,13 +195,13 @@ mod tests {
         assert_eq!(longest_common_substring(&"abcdefgh", &"defghijk"), "defgh");
         assert_eq!(longest_common_substring(&"xyabcz", &"abcxy"), "abc");
         assert_eq!(longest_common_substring(&"ABCDEFG", &"abcdefg"), "");
-        // assert_eq!(
-        //     longest_common_substring(
-        //         &"thisisaverylongstringwithacommonsubstring",
-        //         &"anotherlongstringwithacommonsubstring"
-        //     ),
-        //     "longstringwithacommonsubstring"
-        // );
+        assert_eq!(
+            longest_common_substring(
+                &"thisisaverylongstringwithacommonsubstring",
+                &"anotherlongstringwithacommonsubstring"
+            ),
+            "longstringwithacommonsubstring"
+        );
         assert_eq!(longest_common_substring("a", "a"), "a");
     }
 
