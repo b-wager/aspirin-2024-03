@@ -1,0 +1,11 @@
+Hello
+world
+Hello world
+hello WORLD
+Rust is great
+rust is awesome
+H3llo w0rld
+Special characters: !@#$%^&*()
+Regex test: H.llo
+No match here
+Another line with Hello
