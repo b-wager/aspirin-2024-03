@@ -7,6 +7,6 @@ fn main() {
         std::process::exit(2);
     }
 
-    let proxy_addr = &args[1];
-    let origin_addr = &args[2];
+    // let proxy_addr = &args[1];
+    // let origin_addr = &args[2];
 }
