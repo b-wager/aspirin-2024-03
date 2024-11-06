@@ -1,16 +1,17 @@
 /// Increments a mutable i32 reference by 1. On overflow, wraps around.
-fn increments() {
-    todo!();
+fn increments(x: &mut i32) {
+    *x = x.wrapping_add(1);
 }
 
 /// Given two mutable i32 references, swap their values
-fn swap() {
-    todo!();
+fn swap(x: &mut i32, y: &mut i32) {
+    std::mem::swap(&mut (*x), &mut (*y));
 }
 
 /// Given a mutable string slice, strip all vowels and digits
-fn strip_vowels_and_digits() {
-    todo!();
+fn strip_vowels_and_digits(s: &mut String) -> String {
+    strip_vowels(s);
+    strip_digits(s.clone())
 }
 
 // DO NOT MODIFY BELOW THIS LINE

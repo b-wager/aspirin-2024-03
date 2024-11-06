@@ -20,7 +20,17 @@ impl FromStr for HttpRequest {
 
     // Parse a string into an HTTP Request
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        todo!()
+        let mut parts = s.splitn(2, "\r\n\r\n");
+        let headers = parts.next().ok_or("Invalid request")?;
+        let body = parts.next().map(|s| s.to_string());
+
+        let request_line = headers.lines().next().ok_or("Invalid request")?;
+        let mut parts = request_line.split_whitespace();
+
+        let method = parts.next().map(|s| s.to_string());
+        let path = parts.next().map(|s| s.to_string());
+
+        Ok(HttpRequest { method, path, body })
     }
 }
 
@@ -43,14 +53,39 @@ impl HttpResponse {
 impl Display for HttpResponse {
     /// Convert an HttpResponse struct to a valid HTTP Response
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        todo!()
+        write!(
+            f,
+            "HTTP/1.1 {} {}\r\n\r\n{}",
+            self.status_code, self.status_text, self.body
+        )
     }
 }
 
 impl From<AspirinEatsError> for HttpResponse {
     /// Given an error type, convert it to an appropriate HTTP Response
     fn from(value: AspirinEatsError) -> Self {
-        todo!()
+        match value {
+            AspirinEatsError::ParseError(_) => {
+                HttpResponse::new(400, "Bad Request", "Failed to parse request\n")
+            }
+            AspirinEatsError::Database(_) => HttpResponse::new(
+                503,
+                "Service Unavailable",
+                "Failed to interact with database\n",
+            ),
+            AspirinEatsError::Io(_) => {
+                HttpResponse::new(500, "Internal Server Error", "Internal Server Error\n")
+            }
+            AspirinEatsError::InvalidRequest => {
+                HttpResponse::new(400, "Bad Request", "Invalid Request\n")
+            }
+            AspirinEatsError::NotFound => {
+                HttpResponse::new(404, "Not Found", "Resource not found\n")
+            }
+            AspirinEatsError::MethodNotAllowed => {
+                HttpResponse::new(405, "Method Not Allowed", "Method not allowed\n")
+            }
+        }
     }
 }
 
@@ -82,24 +117,24 @@ mod tests {
         let response: HttpResponse = error.into();
         assert_eq!(response.status_code, 400);
         assert_eq!(response.status_text, "Bad Request");
-        assert_eq!(response.body, "Invalid Request");
+        assert_eq!(response.body, "Invalid Request\n");
 
         let error = AspirinEatsError::NotFound;
         let response: HttpResponse = error.into();
         assert_eq!(response.status_code, 404);
         assert_eq!(response.status_text, "Not Found");
-        assert_eq!(response.body, "Resource not found");
+        assert_eq!(response.body, "Resource not found\n");
 
         let error = AspirinEatsError::MethodNotAllowed;
         let response: HttpResponse = error.into();
         assert_eq!(response.status_code, 405);
         assert_eq!(response.status_text, "Method Not Allowed");
-        assert_eq!(response.body, "Method not allowed");
+        assert_eq!(response.body, "Method not allowed\n");
 
         let error = AspirinEatsError::Io(std::io::Error::new(std::io::ErrorKind::Other, "test"));
         let response: HttpResponse = error.into();
         assert_eq!(response.status_code, 500);
         assert_eq!(response.status_text, "Internal Server Error");
-        assert_eq!(response.body, "Internal Server Error");
+        assert_eq!(response.body, "Internal Server Error\n");
     }
 }

@@ -1,29 +1,21 @@
+mod args;
+mod input_reader;
+mod tests;
+use args::Args;
+use input_reader::InputReader;
+
 use anyhow::Result;
 use clap::Parser;
-use colored::Color;
-use std::path::PathBuf;
-
-#[derive(Parser, Debug)]
-struct Args {
-    #[clap(short, long)]
-    ignore_case: bool,
-
-    #[clap(short = 'v', long)]
-    invert_match: bool,
-
-    #[clap(short, long)]
-    regex: bool,
-
-    #[clap(short, long)]
-    color: Option<Color>,
-
-    needle: String,
-
-    file: Option<PathBuf>,
-}
+use std::fs::File;
 
 fn main() -> Result<()> {
     let args = Args::parse();
-    println!("{:?}", args);
+    if args.file.is_none() {
+        let stdin = std::io::stdin();
+        stdin.search(&args);
+    } else {
+        let file = File::open(args.file.clone().unwrap())?;
+        file.search(&args);
+    }
     Ok(())
 }

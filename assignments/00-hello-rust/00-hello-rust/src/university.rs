@@ -12,7 +12,7 @@ struct Student {
     gpa: f32,
 }
 
-const OLIN_STUDENTS: [Student; 5] = [
+const OLIN_STUDENTS: [Student; 8] = [
     Student {
         name: "Alice",
         class_year: ClassYear::Senior,
@@ -38,13 +38,58 @@ const OLIN_STUDENTS: [Student; 5] = [
         class_year: ClassYear::Senior,
         gpa: 0.0,
     },
+    Student {
+        name: "Anna",
+        class_year: ClassYear::FirstYear,
+        gpa: 4.0,
+    },
+    Student {
+        name: "Hannah",
+        class_year: ClassYear::FirstYear,
+        gpa: 4.0,
+    },
+    Student {
+        name: "Lorin",
+        class_year: ClassYear::Junior,
+        gpa: 3.6,
+    },
 ];
 
-fn get_average_gpa() -> f32 {}
+fn get_average_gpa() -> f32 {
+    let mut total_gpa = 0.0;
+    let mut num_students = 0;
+    for student in OLIN_STUDENTS.iter() {
+        if student.class_year != ClassYear::FirstYear {
+            total_gpa += student.gpa;
+            num_students += 1;
+        }
+    }
+    total_gpa / num_students as f32
+}
 
-fn get_num_excel_students_for_class(class_year: ClassYear) -> u32 {}
+fn get_num_excel_students_for_class(class_year: ClassYear) -> u32 {
+    let mut num_excel_students = 0;
+    let average_gpa = get_average_gpa();
+    for student in OLIN_STUDENTS.iter() {
+        if student.class_year == class_year && student.gpa > average_gpa {
+            num_excel_students += 1;
+        }
+    }
+    num_excel_students
+}
 
-fn get_best_class() -> ClassYear {}
+fn get_best_class() -> ClassYear {
+    let mut best_class = ClassYear::Senior;
+    let mut best_class_num_excel_students = 0;
+    for class_year in [ClassYear::Senior, ClassYear::Junior, ClassYear::Sophomore] {
+        let num_excel_students = get_num_excel_students_for_class(class_year);
+        if num_excel_students > best_class_num_excel_students {
+            best_class = class_year;
+            best_class_num_excel_students = num_excel_students;
+        }
+    }
+    best_class
+}
 
 // Do not modify below here
 #[cfg(test)]
